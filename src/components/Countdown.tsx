@@ -1,44 +1,21 @@
 import { useState, useEffect, useContext } from 'react';
-import { ChallengesContext } from '../contexts/ChallengeContext';
+import { CountdownContext } from '../contexts/CountdownContext';
 import styles from '../styles/components/Countdown.module.css';
 
-let countdownTimeout: NodeJS.Timeout;
-
 export function Countdown() {
-  const { startNewChallenge } = useContext(ChallengesContext);
+  const {
+    hasFinished,
+    isActive, 
+    minutes,
+    seconds,
+    resetCountdown,
+    startCountdown
+  } = useContext(CountdownContext);
 
-  const [time, setTime] = useState(0.1 * 60); //25 min in seconds
-  const [isActive, setIsActive] = useState(false);
-  const [hasFinished, setHasFinished] = useState(false);
-
-  const minutes = Math.floor(time / 60); //Arrendonda o valor
-  const seconds = time % 60; //rest of the division
-
+  //These data are only visual/style, so that why they aren't in the context
   const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('');
   const [secondLeft, secondRight] = String(seconds).padStart(2, '0').split('');
   //padStart basically if doesn't have 2 characters like "15", "89"... it's going convert to "0(number)" like "08"
-
-  function startCountdown() {
-    setIsActive(true);
-  }
-
-  function resetCountdown() {
-    clearTimeout(countdownTimeout);
-    setIsActive(false);
-    setTime(0.1 * 60);
-  }
-
-  useEffect(() => {
-    if (isActive && time > 0) {
-      countdownTimeout = setTimeout(() => { //even if you stop, this line is gonna run, so you need to clean the timeout
-        setTime(time - 1);
-      }, 1000)
-    } else if (isActive && time === 0) {
-      setHasFinished(true);
-      setIsActive(false);
-      startNewChallenge();
-    }
-  }, [isActive, time]) //when the 'isActive' or 'time' value change, this function will start
 
   return (
     <div>
