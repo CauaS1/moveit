@@ -1,0 +1,9 @@
+- Skeleton of the index structure 
+
+Create a react router dom, where the first page it's gonna be the <Login />,
+After do the login, you'll can go around the application.
+
+- Github login
+You'll need to read about "Github Authentication" where you'll need to req only the full name,
+And a system of Singoff
+
