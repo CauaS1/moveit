@@ -1,48 +1,13 @@
-import Head from 'next/head';
 import { GetServerSideProps } from 'next';
-import ExperienceBar from "../components/ExperienceBar";
-import { Profile } from '../components/Profile';
-import { CompletedChallenges } from "../components/CompletedChallenges";
-import { Countdown } from "../components/Countdown";
-import { ChallengeBox } from "../components/ChallengeBox";
 
-import styles from '../styles/pages/Home.module.css';
-import { CountdownProvider } from "../contexts/CountdownContext";
-import { ChallengesProvider } from '../contexts/ChallengeContext';
 import { Login } from './Login';
+import { LoginProvider } from '../contexts/LoginContext';
 
-
-export default function Home(props) {
-  console.log(props);
-
+export default function Home() {
   return (
-    <Login />
-    // <ChallengesProvider
-    //   level={props.level}
-    //   currentExperience={props.currentExperience}
-    //   challengesCompleted={props.challengesCompleted}
-    // >
-    //   <div className={styles.container}>
-    //     <Head>
-    //       <title>Home | Move.it</title>
-    //     </Head>
-
-    //     <ExperienceBar />
-
-    //     <CountdownProvider>
-    //       <section>
-    //         <div>
-    //           <Profile />
-    //           <CompletedChallenges />
-    //           <Countdown />
-    //         </div>
-    //         <div>
-    //           <ChallengeBox />
-    //         </div>
-    //       </section>
-    //     </CountdownProvider>
-    //   </div>
-    // </ChallengesProvider>
+    <LoginProvider>
+      <Login />
+    </LoginProvider>
   )
 }
 

@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import firebase from 'firebase';
 
 import styles from '../styles/pages/Login.module.css';
+import { LoginContext } from '../contexts/LoginContext';
 
 export function Login() {
-  function firebaseStart() {
+  const { githubLogin } = useContext(LoginContext);
+    function firebaseStart() {
     var firebaseConfig = {
       apiKey: "AIzaSyDVJgORzj6LKNukG1TkKdtE08hb6wxbGpU",
       authDomain: "moveit-a3d2d.firebaseapp.com",
@@ -17,21 +19,6 @@ export function Login() {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     };
-  }
-
-  var provider = new firebase.auth.GithubAuthProvider();
-
-  function login() {
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then(result => {
-        var credential = result.credential;
-        console.log(credential);
-      })
-      .catch(err => {
-        console.log(err);
-      })
   }
 
   useEffect(() => {
@@ -50,14 +37,10 @@ export function Login() {
           para começar
         </p>
 
-        <div className={styles.inputContainer}>
-          <input type="text"
-            placeholder="Digite um username"
-          />
-          <button onClick={login}>
-            <img src="/icons/right-arrow.svg" alt="Seta" />
-          </button>
-        </div>
+        <button onClick={githubLogin} >
+          Clique no botão para começar
+          <img src="/icons/right-arrow.svg" alt="Seta" />
+        </button>
 
       </div>
     </div>

@@ -39,40 +39,29 @@
   height: 2rem;
 }
 
-/*Input container*/
-.inputContainer {
-  width: 100%;
+.loginContainer div button {
+  width: 90%;
   height: 3.5rem;
 
   margin-top: 2rem;
-}
-
-.inputContainer input {
-  flex: 1;
-  height: 100%;
-  padding: 0 .5rem;
-
-  border: 0;
-  border-radius: .3rem;
-
-  color: var(--text-highlight);
-  background: linear-gradient(90deg, #4953B8, #4952b844);
-}
-
-.inputContainer input::placeholder {
-  color: var(--text-highlight);
-}
-
-.inputContainer button {
-  width: 3.5em;
-  height: 100%;
 
   background: var(--blue-dark);
+  color: #fff;
   border: 0;
   border-radius: .3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  transition: filter .3s;
 }
 
-.inputContainer button img {
+.loginContainer div button:hover {
+  filter: brightness(.9);
+}
+
+.loginContainer div button img {
   width: 1rem;
   height: 1rem;
 }
