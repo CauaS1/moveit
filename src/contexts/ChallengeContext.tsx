@@ -2,13 +2,24 @@ import { createContext, useState, ReactNode, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import challenges from '../../challenges.json';
 import { LevelUpModal } from '../components/LevelUpModa';
+import { db } from '../database/db';
 
 interface ChallengesProviderProps {
   children: ReactNode;
 
-  level: number;
-  currentExperience: number;
+  // level: number;
+  // currentExperience: number;
+  // challengesCompleted: number;
+}
+
+interface Data {
+  allInfo: FirebaseData;
+}
+
+interface FirebaseData {
   challengesCompleted: number;
+  currentExperience: number;
+  level: number;
 }
 
 interface Challenge {
@@ -28,6 +39,7 @@ interface ChallengesContextData {
   resetChallenge: () => void;
   completedChallenge: () => void;
   closeLevelUpModal: () => void;
+  getUserLevel: () => void;
 }
 
 export const ChallengesContext = createContext({} as ChallengesContextData);
@@ -36,9 +48,9 @@ export function ChallengesProvider({
   children,
   ...rest //a obje where within there is level, currExperience and chCompleted
 }: ChallengesProviderProps) {
-  const [level, setLevel] = useState(rest.level ?? 1);
-  const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0);
-  const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0);
+  const [level, setLevel] = useState(1);
+  const [currentExperience, setCurrentExperience] = useState(0);
+  const [challengesCompleted, setChallengesCompleted] = useState(0);
 
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [isLevelModalOpen, setIsLevelModalOpen] = useState(false);
@@ -47,6 +59,7 @@ export function ChallengesProvider({
 
   useEffect(() => {
     Notification.requestPermission();
+    getUserLevel(); //Later put this when the level, chCompleted and currExperience change
   }, []);
 
   useEffect(() => { //setting the cookies
@@ -67,7 +80,6 @@ export function ChallengesProvider({
   function startNewChallenge() {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length)
     const challenge = challenges[randomChallengeIndex]
-    console.log(challenge);
     setActiveChallenge(challenge);
 
     new Audio('./notification.mp3').play(); //everything that is inside "public" folder don't need to do something like this "../../..."
@@ -102,6 +114,17 @@ export function ChallengesProvider({
     setChallengesCompleted(challengesCompleted + 1);
   }
 
+  async function getUserLevel() {
+    await db.collection('level').get().then((data => {
+      data.forEach(doc => {
+        const data = doc.data();
+        setLevel(data.level);
+        setChallengesCompleted(data.challengesCompleted);
+        setCurrentExperience(data.currentExperience);
+      })
+    }))
+  }
+
   return (
     <ChallengesContext.Provider
       value={{
@@ -114,7 +137,8 @@ export function ChallengesProvider({
         resetChallenge,
         experienceToNextLevel,
         completedChallenge,
-        closeLevelUpModal
+        closeLevelUpModal,
+        getUserLevel,
       }}>
       {children}
 

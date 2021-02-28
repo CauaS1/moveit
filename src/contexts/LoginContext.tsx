@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import firebase from 'firebase';
 import { useRouter } from 'next/router';
 
@@ -10,6 +10,7 @@ interface LoginContextData {
   displayName: string;
   photoURL: string;
   githubLogin: () => void;
+  logoutCurrentUser: () => void;
 }
 
 export const LoginContext = createContext({} as LoginContextData);
@@ -26,14 +27,7 @@ export function LoginProvider({ children }: LoginProviderProps) {
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then(result => {
-        var user = result.user;
-
-        user.providerData.map(data => {
-          setDisplayName(data.displayName);
-          setPhotoURL(data.photoURL);
-        })
-
+      .then(() => {
         router.push('/main');
       })
       .catch(err => {
@@ -41,11 +35,33 @@ export function LoginProvider({ children }: LoginProviderProps) {
       })
   }
 
+  function getCurrentUser() {
+    var user = firebase.auth().currentUser;
+    if (user != null) {
+      setDisplayName(user.displayName);
+      setPhotoURL(user.photoURL);
+    } else {
+      router.push('/');
+    }
+  }
+
+  function logoutCurrentUser() {
+    firebase.auth().signOut().then(() => {
+      console.log('Singout with success!');
+      router.push('/');
+    }).catch(err => console.log('Error! ' + err))
+  } 
+
+  useEffect(() => {
+    getCurrentUser();
+  }, [])
+
   return (
     <LoginContext.Provider value={{
       githubLogin,
       photoURL,
-      displayName
+      displayName,
+      logoutCurrentUser
     }}>
       {children}
     </LoginContext.Provider>

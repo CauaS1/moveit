@@ -1,0 +1,14 @@
+.logoutButton {
+  padding: .1rem .8rem;
+  margin: 0 auto;
+
+  color: var(--blue);
+  border: 0;
+  background: none;
+
+  transition: filter .3s;
+}
+
+.logoutButton:hover {
+  filter: brightness(120%);
+}

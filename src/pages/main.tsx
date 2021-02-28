@@ -9,9 +9,13 @@ import { ChallengeBox } from "../components/ChallengeBox";
 import styles from '../styles/pages/Home.module.css';
 import { CountdownProvider } from "../contexts/CountdownContext";
 import { ChallengesProvider } from '../contexts/ChallengeContext';
-import { LoginProvider } from '../contexts/LoginContext';
+import { LoginContext, LoginProvider } from '../contexts/LoginContext';
+import { useContext } from 'react';
+import { LogoutButton } from '../components/LogoutButton';
 
 export default function Main(props) {
+  const { logoutCurrentUser } = useContext(LoginContext);
+
   return (
     <ChallengesProvider
       level={props.level}
@@ -22,7 +26,6 @@ export default function Main(props) {
         <Head>
           <title>Home | Move.it</title>
         </Head>
-
         <ExperienceBar />
 
         <CountdownProvider>
@@ -34,12 +37,16 @@ export default function Main(props) {
               <CompletedChallenges />
               <Countdown />
             </div>
-            
+
             <div>
               <ChallengeBox />
             </div>
           </section>
         </CountdownProvider>
+
+        <LoginProvider>
+          <LogoutButton />
+        </LoginProvider>
       </div>
     </ChallengesProvider>
   );

@@ -11,17 +11,17 @@ export default function Home() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
 
-  return {
-    props: {
-      level: Number(level),
-      currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted)
-    }
-  }
-}
+//   return {
+//     props: {
+//       level: Number(level),
+//       currentExperience: Number(currentExperience),
+//       challengesCompleted: Number(challengesCompleted)
+//     }
+//   }
+// }
 
 // Back-end (Ruby for ex.) 
 // Next.js (Node.js)

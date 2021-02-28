@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { ChallengesContext } from '../contexts/ChallengeContext';
 import { CountdownContext } from '../contexts/CountdownContext';
 import styles from '../styles/components/Countdown.module.css';
 
@@ -11,6 +12,8 @@ export function Countdown() {
     resetCountdown,
     startCountdown
   } = useContext(CountdownContext);
+
+  const { getLevel } = useContext(ChallengesContext);
 
   //These data are only visual/style, so that why they aren't in the context
   const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('');

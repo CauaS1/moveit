@@ -65,3 +65,14 @@
   width: 1rem;
   height: 1rem;
 }
+
+/*Responsive*/
+@media(max-width: 800px) {
+  .loginContainer {
+    justify-content: center;
+  }
+
+  .loginContainer div:first-child {
+    width: 80%;
+  }
+}
