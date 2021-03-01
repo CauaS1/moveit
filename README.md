@@ -1,5 +1,9 @@
 # Move.it
 
+<p align="center">
+  <img src="https://github.com/CauaS1/moveit/blob/main/public/icons/logo.svg" />
+</p>
+
 ## Next Level Week
 It's an event where happens a few times in a year where the objective is improve your skills creating a project using the best technologies.
 
