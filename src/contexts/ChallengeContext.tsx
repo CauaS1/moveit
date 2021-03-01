@@ -1,5 +1,6 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import firebase from 'firebase';
 import challenges from '../../challenges.json';
 import { LevelUpModal } from '../components/LevelUpModa';
 import { db } from '../database/db';
@@ -10,16 +11,6 @@ interface ChallengesProviderProps {
   // level: number;
   // currentExperience: number;
   // challengesCompleted: number;
-}
-
-interface Data {
-  allInfo: FirebaseData;
-}
-
-interface FirebaseData {
-  challengesCompleted: number;
-  currentExperience: number;
-  level: number;
 }
 
 interface Challenge {
@@ -46,7 +37,7 @@ export const ChallengesContext = createContext({} as ChallengesContextData);
 
 export function ChallengesProvider({
   children,
-  ...rest //a obje where within there is level, currExperience and chCompleted
+  // ...rest //a obje where within there is level, currExperience and chCompleted
 }: ChallengesProviderProps) {
   const [level, setLevel] = useState(1);
   const [currentExperience, setCurrentExperience] = useState(0);
@@ -59,13 +50,17 @@ export function ChallengesProvider({
 
   useEffect(() => {
     Notification.requestPermission();
-    getUserLevel(); //Later put this when the level, chCompleted and currExperience change
+    getUserLevel();
+    addData();
+
+    //Later put this when the level, chCompleted and currExperience change
   }, []);
 
   useEffect(() => { //setting the cookies
-    Cookies.set('level', String(level));
-    Cookies.set('currentExperience', String(currentExperience));
-    Cookies.set('challengesCompleted', String(challengesCompleted));
+    updateValues();
+    // Cookies.set('level', String(level));
+    // Cookies.set('currentExperience', String(currentExperience));
+    // Cookies.set('challengesCompleted', String(challengesCompleted));
   }, [level, currentExperience, challengesCompleted]);
 
   function levelUp() {
@@ -114,6 +109,17 @@ export function ChallengesProvider({
     setChallengesCompleted(challengesCompleted + 1);
   }
 
+
+  async function addData() {
+    const user = await firebase.auth().currentUser.uid;
+
+    db.collection('level').doc(user).set({
+      level: 0,
+      currentExperience: 0,
+      challengesCompleted: 0,
+    });
+  }
+
   async function getUserLevel() {
     await db.collection('level').get().then((data => {
       data.forEach(doc => {
@@ -123,6 +129,16 @@ export function ChallengesProvider({
         setCurrentExperience(data.currentExperience);
       })
     }))
+  }
+
+  async function updateValues() {
+    const userId = await firebase.auth().currentUser.uid;
+
+    db.collection('level').doc(userId).update({
+      level,
+      currentExperience,
+      challengesCompleted
+    });
   }
 
   return (
