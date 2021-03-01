@@ -1,5 +1,3 @@
-# Move.it
-
 <p align="center">
   <img src="https://github.com/CauaS1/moveit/blob/main/public/icons/logo.svg" />
 </p>
