@@ -6,7 +6,7 @@ import styles from '../styles/components/Profile.module.css';
 export function Profile() {
   const { level } = useContext(ChallengesContext);
   const { displayName, photoURL } = useContext(LoginContext);
-
+  console.log(displayName)
   return (
     <div className={styles.profileContainer}>
       <img src={photoURL} alt="Avatar" />

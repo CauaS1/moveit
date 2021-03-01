@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { GetServerSideProps } from 'next';
 
 import ExperienceBar from "../components/ExperienceBar";
 import { Profile } from '../components/Profile';
@@ -14,7 +15,6 @@ import { useContext } from 'react';
 import { LogoutButton } from '../components/LogoutButton';
 
 export default function Main(props) {
-  const { logoutCurrentUser } = useContext(LoginContext);
 
   return (
     <ChallengesProvider
@@ -50,4 +50,16 @@ export default function Main(props) {
       </div>
     </ChallengesProvider>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
+
+  return {
+    props: {
+      level: Number(level),
+      currentExperience: Number(currentExperience),
+      challengesCompleted: Number(challengesCompleted)
+    }
+  }
 }

@@ -13,7 +13,6 @@ export function Countdown() {
     startCountdown
   } = useContext(CountdownContext);
 
-  const { getLevel } = useContext(ChallengesContext);
 
   //These data are only visual/style, so that why they aren't in the context
   const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('');

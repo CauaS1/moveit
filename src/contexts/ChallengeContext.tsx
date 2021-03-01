@@ -8,9 +8,9 @@ import { db } from '../database/db';
 interface ChallengesProviderProps {
   children: ReactNode;
 
-  // level: number;
-  // currentExperience: number;
-  // challengesCompleted: number;
+  level: number;
+  currentExperience: number;
+  challengesCompleted: number;
 }
 
 interface Challenge {
@@ -37,11 +37,12 @@ export const ChallengesContext = createContext({} as ChallengesContextData);
 
 export function ChallengesProvider({
   children,
-  // ...rest //a obje where within there is level, currExperience and chCompleted
+  ...rest //a obje where within there is level, currExperience and chCompleted
 }: ChallengesProviderProps) {
-  const [level, setLevel] = useState(1);
-  const [currentExperience, setCurrentExperience] = useState(0);
-  const [challengesCompleted, setChallengesCompleted] = useState(0);
+  console.log(rest);
+  const [level, setLevel] = useState(rest.level ?? 1);
+  const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0);
+  const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0);
 
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [isLevelModalOpen, setIsLevelModalOpen] = useState(false);
@@ -52,15 +53,14 @@ export function ChallengesProvider({
     Notification.requestPermission();
     getUserLevel();
     addData();
-
-    //Later put this when the level, chCompleted and currExperience change
   }, []);
 
-  useEffect(() => { //setting the cookies
+  useEffect(() => { //set the cookies, they need to be a STRING!!
+    Cookies.set('level', String(level));
+    Cookies.set('currentExperience', String(currentExperience));
+    Cookies.set('challengesCompleted', String(challengesCompleted));
+
     updateValues();
-    // Cookies.set('level', String(level));
-    // Cookies.set('currentExperience', String(currentExperience));
-    // Cookies.set('challengesCompleted', String(challengesCompleted));
   }, [level, currentExperience, challengesCompleted]);
 
   function levelUp() {
@@ -109,7 +109,6 @@ export function ChallengesProvider({
     setChallengesCompleted(challengesCompleted + 1);
   }
 
-
   async function addData() {
     const user = await firebase.auth().currentUser.uid;
 
@@ -135,9 +134,9 @@ export function ChallengesProvider({
     const userId = await firebase.auth().currentUser.uid;
 
     db.collection('level').doc(userId).update({
-      level,
-      currentExperience,
-      challengesCompleted
+      level: rest.level,
+      currentExperience: rest.currentExperience,
+      challengesCompleted: rest.challengesCompleted
     });
   }
 

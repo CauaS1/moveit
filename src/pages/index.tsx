@@ -11,8 +11,10 @@ export default function Home() {
   )
 }
 
+
 // export const getServerSideProps: GetServerSideProps = async (ctx) => {
 //   const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
+//   console.log('props here! ' + level)
 
 //   return {
 //     props: {
