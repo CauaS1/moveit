@@ -39,7 +39,6 @@ export function ChallengesProvider({
   children,
   ...rest //a obje where within there is level, currExperience and chCompleted
 }: ChallengesProviderProps) {
-  console.log(rest);
   const [level, setLevel] = useState(rest.level ?? 1);
   const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0);
   const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0);
@@ -52,15 +51,19 @@ export function ChallengesProvider({
   useEffect(() => {
     Notification.requestPermission();
     getUserLevel();
-    addData();
+    // addData();
   }, []);
 
   useEffect(() => { //set the cookies, they need to be a STRING!!
+    if(level != 0 || currentExperience != 0 || challengesCompleted != 0) {
+      updateValues();
+    }
+
     Cookies.set('level', String(level));
     Cookies.set('currentExperience', String(currentExperience));
     Cookies.set('challengesCompleted', String(challengesCompleted));
 
-    updateValues();
+    console.log('Updated!!!!!!!!');
   }, [level, currentExperience, challengesCompleted]);
 
   function levelUp() {
@@ -120,18 +123,18 @@ export function ChallengesProvider({
   }
 
   async function getUserLevel() {
-    await db.collection('level').get().then((data => {
-      data.forEach(doc => {
-        const data = doc.data();
-        setLevel(data.level);
-        setChallengesCompleted(data.challengesCompleted);
-        setCurrentExperience(data.currentExperience);
-      })
+    const userId = firebase.auth().currentUser.uid;
+    await db.collection('level').doc(userId).get().then((doc => {
+      const userData = doc.data();
+      console.log(userData);
+      setLevel(userData.level);
+      setChallengesCompleted(userData.challengesCompleted);
+      setCurrentExperience(userData.currentExperience);
     }))
   }
 
-  async function updateValues() {
-    const userId = await firebase.auth().currentUser.uid;
+  function updateValues() {
+    const userId = firebase.auth().currentUser.uid;
 
     db.collection('level').doc(userId).update({
       level: rest.level,
@@ -153,7 +156,7 @@ export function ChallengesProvider({
         experienceToNextLevel,
         completedChallenge,
         closeLevelUpModal,
-        getUserLevel,
+        getUserLevel
       }}>
       {children}
 
